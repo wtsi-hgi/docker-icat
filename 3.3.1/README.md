@@ -1,5 +1,5 @@
 # iRODS 3.3.1 Server
-This is an installation of a vanilla [iRODS 3.3.1](https://github.com/irods/irods-legacy) server that works out of the
+This is an Docker image of a vanilla [iRODS 3.3.1](https://github.com/irods/irods-legacy) server that works out of the
 box.
 
 The image is based off [that by agveapi](https://hub.docker.com/r/agaveapi/irods), with an additional fix for an issue 
@@ -24,11 +24,12 @@ docker run -d --name irods -p 1247:1247 wtsi-hgi/irods:3.3.1
 
 ### Connecting
 The following iRODS users have been setup:
-| Username | Password | Zone | Admin |
-| --- | --- | --- | --- |
-| rods | rods | iplant | Yes |
-| testuser | testuser | iplant | No |
-
+```
+| Username | Password | Zone   | Admin |
+| -------- | -------- | ------ | ----- |
+| rods     | rods     | iplant | Yes   |
+| testuser | testuser | iplant | No    |
+```
 
 The `.irodsEnv` required to connect as the preconfigured 'rods' user is:
 ```
