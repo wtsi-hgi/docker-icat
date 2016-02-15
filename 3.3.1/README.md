@@ -22,12 +22,13 @@ To run the container (with iCAT port binding to the host machine):
 docker run -d --name irods -p 1247:1247 wtsi-hgi/irods:3.3.1
 ```
 
-### Connecting to once running
-The following users exist within the `iplant` zone:
+### Connecting
+The following iRODS users have been setup:
 | Username | Password | Zone   | Admin |
-| -------- | -------- | ------ | ----- |
+|----------|----------|--------|-------|
 | rods     | rods     | iplant | Yes   |
 | testuser | testuser | iplant | No    |
+
 
 The `.irodsEnv` required to connect as the preconfigured 'rods' user is:
 ```
@@ -36,3 +37,5 @@ irodsHost <$DOCKER_HOST>
 irodsPort 1247
 irodsZone iplant
 ```
+
+
