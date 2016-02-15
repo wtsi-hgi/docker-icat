@@ -24,10 +24,10 @@ docker run -d --name irods -p 1247:1247 wtsi-hgi/irods:3.3.1
 
 ### Connecting
 The following iRODS users have been setup:
-| Username | Password | Zone   | Admin |
-|----------|----------|--------|-------|
-| rods     | rods     | iplant | Yes   |
-| testuser | testuser | iplant | No    |
+| Username | Password | Zone | Admin |
+| --- | --- | --- | --- |
+| rods | rods | iplant | Yes |
+| testuser | testuser | iplant | No |
 
 
 The `.irodsEnv` required to connect as the preconfigured 'rods' user is:
