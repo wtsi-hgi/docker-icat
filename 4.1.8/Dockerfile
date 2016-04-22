@@ -1,5 +1,7 @@
-FROM agaveapi/irods:3.3.1
+FROM gmauro/boxed-irods
 MAINTAINER Colin Nolan <hgi@sanger.ac.uk>
+
+RUN /irods_first_setup
 
 COPY start.sh start.sh
 CMD ./start.sh

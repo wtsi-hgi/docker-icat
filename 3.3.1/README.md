@@ -38,5 +38,5 @@ irodsZone iplant
 
 
 ## More information
-* [Docker Hub page for Agveapi base image](https://hub.docker.com/r/agaveapi/irods)
-* [iRODS website](http://irods.org)
+* [Docker Hub page for Agveapi base image](https://hub.docker.com/r/agaveapi/irods).
+* [iRODS website](http://irods.org).
