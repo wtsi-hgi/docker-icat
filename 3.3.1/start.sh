@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -eu -o pipefail
+
 # Start database
 su - irods -c "/home/irods/iRODS/irodsctl --verbose dbstart"
 
