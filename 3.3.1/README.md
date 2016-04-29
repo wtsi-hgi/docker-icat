@@ -1,4 +1,6 @@
 # iRODS 3.3.1 Server
+**Not for use in production!**
+
 This is an Docker image of a vanilla [iRODS 3.3.1](https://github.com/irods/irods-legacy) server that works out of the box.
 
 The image is based off [that by agveapi](https://hub.docker.com/r/agaveapi/irods), with an additional fix for an issue in the iCAT setup script ([bad assumption about database startup time](https://github.com/irods/irods-legacy/blob/master/iRODS/scripts/perl/irodsctl.pl#L1318)).
