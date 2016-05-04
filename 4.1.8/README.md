@@ -29,6 +29,6 @@ The `irods_environment.json` in `~/.irods` required to connect as the preconfigu
 ```
 
 ## Acknowledgments
-This image was originally based off that [by gmauro](https://github.com/gmauro/boxed-irods) but then re-written to work
+This image was originally based off [that by gmauro](https://github.com/gmauro/boxed-irods) but then re-written to work
 around various issues. It was also influenced by the [iRODS 4.1.3 image]
 (https://github.com/irods/contrib/tree/master/irods-docker) in the iRODS community code repository ("contrib").
