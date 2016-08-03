@@ -4,15 +4,8 @@ set -eu -o pipefail
 # Environment variables for use in build
 IRODS_SETTINGS_DIRECTORY=/root/.irods
 RENCI_URL=ftp://ftp.renci.org
-IRODS_VERSION=4.1.8
 PLATFORM=ubuntu14
-PG_PLUGIN_VERSION=1.8
 TEMP_WORKING_DIRECTORY=/tmp/installing
-
-apt-get update
-apt-get install -y --no-install-recommends \
-    wget \
-    postgresql
 
 # Make temp working directory
 mkdir -p $TEMP_WORKING_DIRECTORY
