@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
+if [ -z ${IRODS_VERSION+x} ];
+then
+    echo "IRODS_VERSION must be set";
+fi
+if [ -z ${PG_PLUGIN_VERSION+x} ];
+then
+    echo "PG_PLUGIN_VERSION must be set";
+fi
+
 # Environment variables for use in build
 IRODS_SETTINGS_DIRECTORY=/root/.irods
 RENCI_URL=ftp://ftp.renci.org
