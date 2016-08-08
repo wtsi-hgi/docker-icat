@@ -15,10 +15,9 @@ set -eu -o pipefail
 sed -i "s/irods_host.*/irods_host\": \"localhost\",/g" /var/lib/irods/.irods/irods_environment.json
 mkdir /root/.irods
 cp /var/lib/irods/.irods/* /root/.irods
-service postgresql start && \
-    service irods start && \
-    iinit irods123 && \
-    iadmin modresc demoResc host localhost
+# Asserting that postgresql and irods have been started during their setup
+iinit irods123
+iadmin modresc demoResc host localhost
 
 # Make the world a better place
 apt-get clean
