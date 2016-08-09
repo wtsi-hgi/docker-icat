@@ -3,7 +3,21 @@ MAINTAINER Colin Nolan <hgi@sanger.ac.uk>
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
-    postgresql
+    postgresql \
+    ca-certificates \
+    libfuse2 \
+    libjson-perl \
+    lsof \
+    python-chardet \
+    python-jsonschema \
+    python-psutil \
+    python-requests \
+    python2.7 \
+    super \
+    unixodbc \
+    sudo \
+    odbc-postgresql
+
 
 ADD install.sh /tmp/install.sh
 ADD install-irods.sh /tmp/install-irods.sh

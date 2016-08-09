@@ -25,10 +25,13 @@ wget ${RENCI_URL}/pub/irods/releases/${IRODS_VERSION}/${PLATFORM}/irods-icat-${I
 wget ${RENCI_URL}/pub/irods/releases/${IRODS_VERSION}/${PLATFORM}/irods-database-plugin-postgres-${PG_PLUGIN_VERSION}-${PLATFORM}-x86_64.deb
 
 # Install iRODS
-# This is going to fail but then the line afterwards will magically fix things so suppressing the failure
-dpkg -i irods-runtime-${IRODS_VERSION}-${PLATFORM}-x86_64.deb irods-icat-${IRODS_VERSION}-${PLATFORM}-x86_64.deb 2> /dev/null || true
-#apt-get -f -y install
-dpkg -i irods-icat-${IRODS_VERSION}-${PLATFORM}-x86_64.deb irods-database-plugin-postgres-${PG_PLUGIN_VERSION}-${PLATFORM}-x86_64.deb 2> /dev/null || true
-apt-get -f -y install
+dpkg -i irods-runtime-${IRODS_VERSION}-${PLATFORM}-x86_64.deb irods-icat-${IRODS_VERSION}-${PLATFORM}-x86_64.deb || true
+dpkg -i irods-icat-${IRODS_VERSION}-${PLATFORM}-x86_64.deb irods-database-plugin-postgres-${PG_PLUGIN_VERSION}-${PLATFORM}-x86_64.deb || true
+# It is difficult to figure out exactly what the dependencies are of the above commands. It is possible to cheat and
+# pipe their errors to null using `2> /dev/null || true` then fix the issues with `apt-get -f -y install`. It is best to
+# know the dependencies though so they can be installed cached in the Dockerfile. Even when the correct dependencies are
+# installed, the above are never happy and will not exit successfully: this is just being ignored here as I do not know
+# how to please the thing...
 
+# Cleanup
 rm -rf $TEMP_WORKING_DIRECTORY
