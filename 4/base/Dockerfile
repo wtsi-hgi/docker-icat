@@ -10,6 +10,7 @@ ADD install-irods.sh /tmp/install-irods.sh
 ADD setup-database.sh /tmp/setup-database.sh
 ADD setup-irods.sh /tmp/setup-irods.sh
 ADD responses.txt /tmp/responses.txt
+ADD resources /tmp/resources
 
 EXPOSE 1247
 
