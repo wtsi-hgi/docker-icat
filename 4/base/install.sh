@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu -o pipefail
+set -euxv -o pipefail
 
 # Install iRODS
 /tmp/install-irods.sh
@@ -18,6 +18,10 @@ cp /var/lib/irods/.irods/* /root/.irods
 # Asserting that postgresql and irods have been started during their setup
 iinit irods123
 iadmin modresc demoResc host localhost
+
+# Let's just make sure iRODS seems to start okey - best to find issues now!
+service irods stop
+/root/start-irods.sh
 
 # Make the world a better place
 apt-get clean

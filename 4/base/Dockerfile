@@ -16,8 +16,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     super \
     unixodbc \
     sudo \
-    odbc-postgresql
-
+    odbc-postgresql \
+    patch
 
 ADD install.sh /tmp/install.sh
 ADD install-irods.sh /tmp/install-irods.sh
@@ -28,7 +28,9 @@ ADD resources /tmp/resources
 
 EXPOSE 1247
 
-COPY start.sh start.sh
+WORKDIR /root
+ADD start-irods.sh start-irods.sh
+ADD start.sh start.sh
 CMD ./start.sh
 
 

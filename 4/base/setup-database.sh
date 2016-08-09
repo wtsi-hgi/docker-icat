@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu -o pipefail
+set -euxv -o pipefail
 
 RESPONSES_FILE=$1
 

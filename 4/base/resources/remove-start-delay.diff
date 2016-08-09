@@ -1,0 +1,22 @@
+@@ -1090,21 +1090,8 @@ sub startIrods
+                 return 0;
+         }
+
+-
+-        sleep( $iRODSStartStopDelay );
+-
+-
+         chdir( $startingDir );
+-
+-
+-        # Check that it actually started
+-        my %serverPids = getIrodsProcessIds( );
+-        if ( (scalar keys %serverPids) == 0 )
+-        {
+-                printError( "iRODS server failed to start.\n" );
+-                return 0;
+-        }
+-
++
+         return 1;
+ }

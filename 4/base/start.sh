@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
-service postgresql start
-service irods start
+./start-irods.sh
 
 echo "iRODS server started successfully!"
 

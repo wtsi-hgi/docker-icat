@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eu -o pipefail
+set -euxv -o pipefail
 
 if [ -z ${IRODS_VERSION+x} ];
 then
