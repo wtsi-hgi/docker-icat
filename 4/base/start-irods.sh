@@ -18,4 +18,4 @@ do
     fi
     sleep 0.05 || sleep 1
 done
-echo "iCAT database has started"
+echo "iCAT server has started"
