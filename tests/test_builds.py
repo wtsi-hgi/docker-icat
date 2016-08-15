@@ -60,7 +60,7 @@ class _TestICAT(unittest.TestCase, IcatSetupContainer, metaclass=ABCMeta):
         random_image_name = create_random_string(self.setup.image_name)
         type(self)._build_image((self.setup.base_image_to_build, (random_image_name, self.setup.location)))
         ServerController = IrodsServerControllerClassBuilder(
-            self.setup.image_name, Version(self.setup.location.split("/")[-1]),
+            random_image_name, Version(self.setup.location.split("/")[-1]),
             self.setup.users, self.setup.superclass).build()
         self.server_controller = ServerController()
 
