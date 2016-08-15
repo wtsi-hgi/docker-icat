@@ -1,12 +1,13 @@
 import logging
 import os
 import unittest
+from abc import ABCMeta
 from typing import List, Optional, Tuple, Union
 
 import tests
 from hgicommon.docker.client import create_client
 from hgicommon.helpers import create_random_string
-from tests._common import IrodsSetup, create_tests_for_all_icat_setups
+from tests._common import IcatSetup, create_tests_for_all_icat_setups, IcatSetupContainer
 from testwithirods.irods_contoller import IrodsServerControllerClassBuilder
 from testwithirods.models import ContainerisedIrodsServer, Version
 
@@ -14,7 +15,7 @@ _PROJECT_ROOT = "%s/.." % os.path.dirname(os.path.realpath(__file__))
 _DEFAULT_IRODS_PORT = 1247
 
 
-class _TestICAT(unittest.TestCase):
+class _TestICAT(unittest.TestCase, IcatSetupContainer, metaclass=ABCMeta):
     """
     Tests for an iCAT setup.
     """
@@ -53,18 +54,14 @@ class _TestICAT(unittest.TestCase):
             chunks.append(chunk.decode("utf-8"))
         return "".join(chunks)
 
-    def __init__(self, setup: IrodsSetup, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._setup = setup
-
     def setUp(self):
         # XXX: Using random image name to stop caching by `test-with-irods`. However should really clean up these
         # images!
-        random_image_name = create_random_string(self._setup.image_name)
-        type(self)._build_image((self._setup.base_image_to_build, (random_image_name, self._setup.location)))
+        random_image_name = create_random_string(self.setup.image_name)
+        type(self)._build_image((self.setup.base_image_to_build, (random_image_name, self.setup.location)))
         ServerController = IrodsServerControllerClassBuilder(
-            self._setup.image_name, Version(self._setup.location.split("/")[-1]),
-            self._setup.users, self._setup.superclass).build()
+            self.setup.image_name, Version(self.setup.location.split("/")[-1]),
+            self.setup.users, self.setup.superclass).build()
         self.server_controller = ServerController()
 
     def tearDown(self):
