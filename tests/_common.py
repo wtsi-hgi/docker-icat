@@ -1,55 +1,57 @@
 import os
-from abc import abstractmethod
+from typing import Sequence, Optional, Tuple
 
-from inflection import camelize
-
-from testwithbaton.api import BatonSetup
+from testwithirods.models import IrodsUser
 
 
-class BatonSetupContainer():
+class IrodsSetup:
     """
-    Container of a baton setup.
+    Model of iRODS setup that is to be tested.
     """
-    @property
-    @abstractmethod
-    def baton_setup(self) -> BatonSetup:
-        """
-        A baton setup
-        :return: baton setup
-        """
+    def __init__(self, image_name: str, base_image_to_build: Optional[Tuple], location: str,
+                 users: Sequence[IrodsUser], superclass: type):
+        self.base_image_to_build = base_image_to_build
+        self.image_name = image_name
+        self.location = location
+        self.users = users
+        self.superclass = superclass
 
 
-def _create_test_for_baton_setup(setup: BatonSetup, test_superclass: type):
+def _setup_test(setup: IrodsSetup, test_superclass: type):
     """
-    Creates tests for single baton setup.
-    :param setup: the setup to create test for
-    :param test_superclass: the test superclass
+    Sets up test.
+    :param setup: the iRODS setup that is being tested
+    :param test_superclass: the superclass of the test to create
     """
-    class_name = "%sWithBaton%s" % (test_superclass.__name__, camelize(setup.name[1:].lower()))
+    test_class_name_postfix = setup.image_name.split(":")[-1].replace("-", "_")
+    class_name = "%s%s" % (test_superclass.__name__[1:], test_class_name_postfix)
 
-    @property
-    def baton_setup(self):
-        return self._baton_setup
+    def init(self, *args, **kwargs):
+        super(type(self), self).__init__(type(self)._SETUP, *args, **kwargs)
 
     globals()[class_name] = type(
         class_name,
         (test_superclass,),
         {
-            "_baton_setup": setup,
-            "baton_setup": baton_setup
+            "_SETUP": setup,
+            "__init__": init
         }
     )
 
 
-def create_tests_for_all_baton_setups(test_superclass: type):
+def create_tests_for_all_icat_setups(test_superclass: type):
     """
-    Creates tests for all baton setups, where tests should be made to inherit from the given test superclass.
-    :param test_superclass: test superclass, which must inherit from `BatonSetupContainer`
+    Creates tests for all iCAT setups, where tests should be made to inherit from the given test superclass.
+    :param test_superclass: test superclass
     """
-    single_setup = os.environ.get("SINGLE_TEST_SETUP")
-    if single_setup:
-        setup = BatonSetup.__dict__[single_setup]
-        _create_test_for_baton_setup(setup, test_superclass)
+    from tests.builds_to_test import builds_to_test
+
+    single_setup_tag = os.environ.get("SINGLE_TEST_SETUP")
+    if single_setup_tag is None:
+        for _setup in builds_to_test:
+            _setup_test(_setup, test_superclass)
     else:
-        for setup in BatonSetup:
-            _create_test_for_baton_setup(setup, test_superclass)
+        for _setup in builds_to_test:
+            if _setup[1][0] == single_setup_tag:
+                _setup_test(_setup, test_superclass)
+                break

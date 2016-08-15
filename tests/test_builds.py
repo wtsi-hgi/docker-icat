@@ -1,14 +1,14 @@
 import logging
 import os
-import types
 import unittest
-from time import sleep
 from typing import List, Optional, Tuple, Union
 
-from tests.builds_to_test import builds_to_test
-from testwithbaton._common import create_client
-from testwithbaton.irods._irods_contoller import IrodsServerController
-from testwithbaton.models import ContainerisedIrodsServer
+import tests
+from hgicommon.docker.client import create_client
+from hgicommon.helpers import create_random_string
+from tests._common import IrodsSetup, create_tests_for_all_icat_setups
+from testwithirods.irods_contoller import IrodsServerControllerClassBuilder
+from testwithirods.models import ContainerisedIrodsServer, Version
 
 _PROJECT_ROOT = "%s/.." % os.path.dirname(os.path.realpath(__file__))
 _DEFAULT_IRODS_PORT = 1247
@@ -37,36 +37,12 @@ class _TestICAT(unittest.TestCase):
             for line in docker_client.build(tag=tag, path=directory):
                 logging.debug(line)
 
-    def __init__(self, top_level_image: Tuple[Optional[Tuple], Tuple[str, str]], *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._top_level_image = top_level_image
-
-    def setUp(self):
-        type(self)._build_image(self._top_level_image)
-        ServerController = self._create_server_controller(self._top_level_image[1][2], self._top_level_image[1][0])
-        self.server_controller = ServerController()
-
-    # TODO: Test stop
-
-    def test_icommands_installed(self):
-        # response = self._run(command="ienv", environment={"DEBUG": 1}, stderr=False)
-        # self.assertIn("Release Version = rods", response)
-        # print(self._run("ils"))
-        container = self.server_controller.start_server()
-        try:
-            test_file_name = "test123"
-            self._run(["touch", test_file_name], container)
-            self._run(["iput", test_file_name], container)
-            self.assertIn(test_file_name, self._run(["ils"], container))
-        finally:
-            self.server_controller.stop_server(container)
-
-
-    def _run(self, command: Union[str, List[str]], container: ContainerisedIrodsServer) -> str:
+    @staticmethod
+    def _run(command: Union[str, List[str]], container: ContainerisedIrodsServer) -> str:
         """
-        TODO
-
-        Run the containerised baton image that is been tested.
+        Run the given commend on the containerised server.
+        :param command: the command to run
+        :param container: the containerised server to run the command in
         """
         container_id = container.native_object["Id"]
         docker_client = create_client()
@@ -77,60 +53,36 @@ class _TestICAT(unittest.TestCase):
             chunks.append(chunk.decode("utf-8"))
         return "".join(chunks)
 
+    def __init__(self, setup: IrodsSetup, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._setup = setup
 
-    @staticmethod
-    def _create_server_controller(controller_base_class: type, image: str) -> IrodsServerController:
-        """
-        TODO
-        :param controller_base_class:
-        :param image:
-        :return:
-        """
-        def start_server(controller: IrodsServerController) -> ContainerisedIrodsServer:
-            return controller._start_server(image, controller_base_class.VERSION, controller_base_class.USERS)
+    def setUp(self):
+        # XXX: Using random image name to stop caching by `test-with-irods`. However should really clean up these
+        # images!
+        random_image_name = create_random_string(self._setup.image_name)
+        type(self)._build_image((self._setup.base_image_to_build, (random_image_name, self._setup.location)))
+        ServerController = IrodsServerControllerClassBuilder(
+            self._setup.image_name, Version(self._setup.location.split("/")[-1]),
+            self._setup.users, self._setup.superclass).build()
+        self.server_controller = ServerController()
 
-        return type(
-            "TODO",
-            (controller_base_class, ),
-            {
-                "start_server": start_server
-            }
-        )
+    def tearDown(self):
+        self.server_controller.tear_down()
 
-
-def _setup_test_for_build(setup):
-    """
-    TODO
-    :param setup:
-    :return:
-    """
-    test_class_name_postfix = setup[1][0].split(":")[-1].replace("-", "_")
-    class_name = "%s%s" % (_TestICAT.__name__[1:], test_class_name_postfix)
-
-    def init(self, *args, **kwargs):
-        super(type(self), self).__init__(type(self)._SETUP, *args, **kwargs)
-
-    globals()[class_name] = type(
-        class_name,
-        (_TestICAT,),
-        {
-            "_SETUP": setup,
-            "__init__": init
-        }
-    )
-
-single_setup_tag = os.environ.get("SINGLE_TEST_SETUP")
-if single_setup_tag is None:
-    for _setup in builds_to_test:
-        _setup_test_for_build(_setup)
-else:
-    for _setup in builds_to_test:
-        if _setup[1][0] == single_setup_tag:
-            _setup_test_for_build(_setup)
-            break
+    def test_starts(self):
+        container = self.server_controller.start_server()
+        test_file_name = "test123"
+        self._run(["touch", test_file_name], container)
+        self._run(["iput", test_file_name], container)
+        self.assertIn(test_file_name, self._run(["ils"], container))
 
 
-# Stop unittest from running the abstract base test
+# Create tests for all baton versions
+create_tests_for_all_icat_setups(_TestICAT)
+for name, value in tests._common.__dict__.items():
+    if _TestICAT.__name__[1:] in name:
+        globals()[name] = value
 del _TestICAT
 
 

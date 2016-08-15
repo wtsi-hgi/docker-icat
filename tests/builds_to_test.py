@@ -1,15 +1,16 @@
 import logging
 
-from testwithbaton.irods._irods_3_controller import Irods3_3_1ServerController
-from testwithbaton.irods._irods_4_controller import Irods4_1_8ServerController, Irods4_1_9ServerController
+from tests._common import IrodsSetup
+from testwithirods.irods_3_controller import Irods3ServerController
+from testwithirods.irods_4_controller import Irods4ServerController
+from testwithirods.models import IrodsUser
 
-IRODS_4_x_x_BASE = (None, ("mercury/icat:4-base", "4/base")),
-
+IRODS_4_x_x_BASE = (None, ("mercury/icat:4-base", "4/base"))
 
 builds_to_test = [
-    (None, ("mercury/icat:3.3.1", "3/3.3.1", Irods3_3_1ServerController)),
-    # (IRODS_4_x_x_BASE, ("mercury/icat:4.1.8", "4/4.1.8", Irods4_1_8ServerController())),
-    # (IRODS_4_x_x_BASE, ("mercury/icat:4.1.9", "4/4.1.9", Irods4_1_9ServerController()))
+    IrodsSetup("mercury/icat:3.3.1", None, "3/3.3.1", [IrodsUser("rods", "iplant", "rods", admin=True)], Irods3ServerController),
+    IrodsSetup("mercury/icat:4.1.8", IRODS_4_x_x_BASE, "4/4.1.8", Irods4ServerController.USERS, Irods4ServerController),
+    IrodsSetup("mercury/icat:4.1.9", IRODS_4_x_x_BASE, "4/4.1.9", Irods4ServerController.USERS, Irods4ServerController)
 ]
 
 logging.root.setLevel(logging.DEBUG)
