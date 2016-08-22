@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wtsi-hgi/docker-icat.svg)](https://travis-ci.org/wtsi-hgi/docker-icat)
+
 # Docker Images for iRODS Servers
 **Not for use in production!** These image are designed for use in testing: there is no setup required - they just work
 out of the box.
