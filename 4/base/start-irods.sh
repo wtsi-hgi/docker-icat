@@ -1,8 +1,21 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
-# Ensure PostgreSQL has started
+# Start PostgreSQL
 service postgresql start
+
+# Ensures PostgreSQL is ready to accept connections, fixing: https://github.com/wtsi-hgi/docker-icat/issues/1
+echo "Waiting for PostgreSQL to start accepting connections"
+while true
+do
+    ready=$(pg_isready || true)
+    if [[ "${ready}" == *"accepting connections"* ]];
+    then
+        break
+    fi
+    sleep 0.05 || sleep 1
+done
+echo "PostgreSQL database is accepting connections!"
 
 # Run iRODS start script
 service irods start
@@ -11,8 +24,8 @@ service irods start
 # service has started
 while true
 do
-    databaseReady=$(service irods status | sed -n '2p' | sed 's/^ *//;s/$//')
-    if [ "${databaseReady}" != "No servers running" ];
+    ready=$(service irods status | sed -n '2p' | sed 's/^ *//;s/$//')
+    if [ "${ready}" != "No servers running" ];
     then
         break
     fi
