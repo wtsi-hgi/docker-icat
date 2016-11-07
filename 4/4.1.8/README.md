@@ -1,7 +1,7 @@
 # iRODS 4.1.8 Server
 **Not for use in production!**
 
-This is an Docker image of a vanilla iRODS 4.1.8 server that works out of the box.
+This is a Docker image of a vanilla iRODS 4.1.8 server that works out of the box.
 
 ## Using the container
 ### Running
