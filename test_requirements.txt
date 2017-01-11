@@ -1,5 +1,3 @@
 hgicommon==1.2.0
 git+https://github.com/wtsi-hgi/useintest.git@c2f2f251332eee17851e7855baf4703efbf49c3d#egg=useintest
 docker==2.0.1
-nose==1.3.7
-nose-exclude==0.5.
