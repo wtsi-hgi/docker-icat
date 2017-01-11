@@ -2,19 +2,17 @@ import os
 from abc import ABCMeta, abstractmethod
 from typing import Sequence, Optional, Tuple
 
-from testwithirods.models import IrodsUser
+from useintest.predefined.irods import IrodsUser
 
 
 class IcatSetup:
     """
     Model of iRODS setup that is to be tested.
     """
-    def __init__(self, image_name: str, base_image_to_build: Optional[Tuple], location: str,
-                 users: Sequence[IrodsUser], superclass: type):
+    def __init__(self, image_name: str, base_image_to_build: Optional[Tuple], location: str, superclass: type):
         self.base_image_to_build = base_image_to_build
         self.image_name = image_name
         self.location = location
-        self.users = users
         self.superclass = superclass
 
 
