@@ -4,17 +4,17 @@ import unittest
 from abc import ABCMeta
 from typing import List, Optional, Tuple, Union
 
-import tests
 from hgicommon.docker.client import create_client
-from hgicommon.helpers import create_random_string
-from tests._common import IcatSetup, create_tests_for_all_icat_setups, IcatSetupContainer
-
-from useintest.predefined.irods import build_irods_service_controller_type, IrodsDockerisedService
+from hgicommon.helpers import create_random_string, extract_version_number
+from hgicommon.testing import get_classes_to_test, create_tests, TestUsingType, TestUsingObject, ObjectTypeUsedInTest
+from tests._common import IcatSetup, setups
+from useintest.predefined.irods import build_irods_service_controller_type, IrodsDockerisedService, \
+    Irods3ServiceController, Irods4ServiceController
 
 _PROJECT_ROOT = "%s/.." % os.path.dirname(os.path.realpath(__file__))
 
 
-class _TestICAT(unittest.TestCase, IcatSetupContainer, metaclass=ABCMeta):
+class _TestICAT(TestUsingObject[ObjectTypeUsedInTest], metaclass=ABCMeta):
     """
     Tests for an iCAT setup.
     """
@@ -54,6 +54,7 @@ class _TestICAT(unittest.TestCase, IcatSetupContainer, metaclass=ABCMeta):
         return "".join(chunks)
 
     def setUp(self):
+        self.setup = self.get_object_to_test()
         random_image_name = create_random_string(self.setup.image_name)
         type(self)._build_image((self.setup.base_image_to_build, (random_image_name, self.setup.location)))
         repository, tag = self.setup.image_name.split(":")
@@ -70,14 +71,12 @@ class _TestICAT(unittest.TestCase, IcatSetupContainer, metaclass=ABCMeta):
         self._run(["iput", test_file_name], self.service)
         self.assertIn(test_file_name, self._run(["ils"], self.service))
 
+# Setup tests
+globals().update(create_tests(_TestICAT, setups, lambda superclass, test_object: "TestICATWith%s"
+                                                                                 % test_object.location.split("/")[1]))
 
-# Create tests for all baton versions
-create_tests_for_all_icat_setups(_TestICAT)
-for name, value in tests._common.__dict__.items():
-    if _TestICAT.__name__[1:] in name:
-        globals()[name] = value
-del _TestICAT
-
+# Fix for stupidity of test runners
+del _TestICAT, TestUsingType, create_tests, get_classes_to_test
 
 if __name__ == "__main__":
     unittest.main()

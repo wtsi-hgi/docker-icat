@@ -1,3 +1,4 @@
 hgicommon==1.2.0
 git+https://github.com/wtsi-hgi/useintest.git@c2f2f251332eee17851e7855baf4703efbf49c3d#egg=useintest
+git+https://github.com/wtsi-hgi/python-common.git@d0dc81d972cc19067a6d314ddc8c9940402b847b#egg=hgicommon
 docker==2.0.1
