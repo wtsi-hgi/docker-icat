@@ -5,11 +5,10 @@ from abc import ABCMeta
 from typing import List, Optional, Tuple, Union
 
 from hgicommon.docker.client import create_client
-from hgicommon.helpers import create_random_string, extract_version_number
-from hgicommon.testing import get_classes_to_test, create_tests, TestUsingType, TestUsingObject, ObjectTypeUsedInTest
-from tests._common import IcatSetup, setups
-from useintest.predefined.irods import build_irods_service_controller_type, IrodsDockerisedService, \
-    Irods3ServiceController, Irods4ServiceController
+from hgicommon.helpers import create_random_string
+from hgicommon.testing import create_tests, TestUsingObject, ObjectTypeUsedInTest
+from tests._common import setups
+from useintest.predefined.irods import build_irods_service_controller_type, IrodsDockerisedService
 
 _PROJECT_ROOT = "%s/.." % os.path.dirname(os.path.realpath(__file__))
 
@@ -76,7 +75,7 @@ globals().update(create_tests(_TestICAT, setups, lambda superclass, test_object:
                                                                                  % test_object.location.split("/")[1]))
 
 # Fix for stupidity of test runners
-del _TestICAT, TestUsingType, create_tests, get_classes_to_test
+del _TestICAT, TestUsingObject, create_tests
 
 if __name__ == "__main__":
     unittest.main()
