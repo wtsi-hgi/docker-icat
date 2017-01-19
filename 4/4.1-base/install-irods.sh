@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euxv -o pipefail
 
+if [ -z ${RENCI_URL+x} ];
+then
+    echo "RENCI_URL must be set";
+fi
 if [ -z ${IRODS_VERSION+x} ];
 then
     echo "IRODS_VERSION must be set";
@@ -12,7 +16,6 @@ fi
 
 # Environment variables for use in build
 IRODS_SETTINGS_DIRECTORY=/root/.irods
-RENCI_URL=ftp://ftp.renci.org
 PLATFORM=ubuntu14
 TEMP_WORKING_DIRECTORY=/tmp/installing
 

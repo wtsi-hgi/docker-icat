@@ -1,7 +1,7 @@
 language: python
 
 python:
-  - 3.5
+  - 3.6
 
 services:
   - docker
@@ -12,9 +12,15 @@ env:
     - SINGLE_TEST_SETUP=mercury/icat:4.1.8
     - SINGLE_TEST_SETUP=mercury/icat:4.1.9
     - SINGLE_TEST_SETUP=mercury/icat:4.1.10
+    - SINGLE_TEST_SETUP=mercury/icat:4.2.0
+
+before_install:
+  - pip install nose
+  - pip install nose-exclude
+  - pip install codecov
 
 install:
   - pip install -r test_requirements.txt
 
 script:
-  - nosetests -v --exclude-test=tests._common.create_tests_for_all_icat_setups
+  - nosetests -v

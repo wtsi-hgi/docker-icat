@@ -1,8 +1,6 @@
-import os
-from abc import ABCMeta, abstractmethod
-from typing import Sequence, Optional, Tuple
+from typing import Optional, Tuple
 
-from useintest.predefined.irods import IrodsUser
+from useintest.predefined.irods import Irods3ServiceController, Irods4ServiceController
 
 
 class IcatSetup:
@@ -15,51 +13,15 @@ class IcatSetup:
         self.location = location
         self.superclass = superclass
 
-
-class IcatSetupContainer(metaclass=ABCMeta):
-    """
-    Container or iCAT setup.
-    """
-    @property
-    @abstractmethod
-    def setup(self) -> IcatSetup:
-        """
-        The iCAT setup.
-        :return: iCAT setup
-        """
+IRODS_4_X_X_BASE = (None, ("mercury/icat:4-base", "4/base"))
+IRODS_4_1_X_BASE = (IRODS_4_X_X_BASE, ("mercury/icat:4.1-base", "4/4.1-base"))
+IRODS_4_2_X_BASE = (IRODS_4_X_X_BASE, ("mercury/icat:4.2-base", "4/4.2-base"))
 
 
-def _setup_test(setup: IcatSetup, test_superclass: type):
-    """
-    Sets up test.
-    :param setup: the iRODS setup that is being tested
-    :param test_superclass: the superclass of the test to create
-    """
-    test_class_name_postfix = setup.image_name.split(":")[-1].replace(".", "_")
-    class_name = "%s%s" % (test_superclass.__name__[1:], test_class_name_postfix)
-
-    globals()[class_name] = type(
-        class_name,
-        (test_superclass,),
-        {
-            "setup": property(lambda self: setup)
-        }
-    )
-
-
-def create_tests_for_all_icat_setups(test_superclass: type):
-    """
-    Creates tests for all iCAT setups, where tests should be made to inherit from the given test superclass.
-    :param test_superclass: test superclass, which must subclass `IcatSetupContainer`
-    """
-    from tests.builds_to_test import builds_to_test
-
-    single_setup_tag = os.environ.get("SINGLE_TEST_SETUP")
-    if single_setup_tag is None:
-        for _setup in builds_to_test:
-            _setup_test(_setup, test_superclass)
-    else:
-        for _setup in builds_to_test:
-            if _setup.image_name == single_setup_tag:
-                _setup_test(_setup, test_superclass)
-                break
+setups = {
+    IcatSetup("mercury/icat:3.3.1", None, "3/3.3.1", Irods3ServiceController),
+    IcatSetup("mercury/icat:4.1.8", IRODS_4_1_X_BASE, "4/4.1.8", Irods4ServiceController),
+    IcatSetup("mercury/icat:4.1.9", IRODS_4_1_X_BASE, "4/4.1.9", Irods4ServiceController),
+    IcatSetup("mercury/icat:4.1.10", IRODS_4_1_X_BASE, "4/4.1.10", Irods4ServiceController),
+    IcatSetup("mercury/icat:4.2.0", IRODS_4_2_X_BASE, "4/4.2.0", Irods4ServiceController)
+}

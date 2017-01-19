@@ -3,10 +3,7 @@ set -euxv -o pipefail
 
 RESPONSES_FILE=$1
 
-# Ensure PostgreSQL has started
-service postgresql start
-
-# Setup iRODS
+# iRODS 4.1.X setup
 /var/lib/irods/packaging/setup_irods.sh < ${RESPONSES_FILE}
 
 # The configuration is validated in the setup - ain't nobody got time to keep validating it every time iRODS starts!

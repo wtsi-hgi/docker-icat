@@ -1,3 +1,10 @@
-Base image for iRODS 4.x.x versions.
+Base image for iRODS 4.X.X versions.
 
-Extend, set the environment variables `ENV IRODS_VERSION` and `PG_PLUGIN_VERSION`, then call `./install.sh`.
+Extend, add the required files (see below), set the environment variable `RENCI`, then call `./install.sh`.
+
+Requires the following files in `/tmp`:
+- `extract-db-settings.sh`
+- `install-irods.sh`
+- `responses.txt` 
+- `setup-irods.sh`
+
