@@ -12,6 +12,7 @@ env:
     - SINGLE_TEST_SETUP=mercury/icat:4.1.8
     - SINGLE_TEST_SETUP=mercury/icat:4.1.9
     - SINGLE_TEST_SETUP=mercury/icat:4.1.10
+    - SINGLE_TEST_SETUP=mercury/icat:4.2.0
 
 before_install:
   - pip install nose
