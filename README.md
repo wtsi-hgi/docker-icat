@@ -11,6 +11,7 @@ Available versions:
 * [iRODS 4.1.8 server](4/4.1.8/)
 * [iRODS 4.1.9 server](4/4.1.9/)
 * [iRODS 4.1.10 server](4/4.1.10/)
+* [iRODS 4.2.0 server](4/4.2.0/)
 
 You may also be interested in [Docker baton](https://github.com/wtsi-hgi/docker-baton/), which can be used to query the
 iCAT server with [baton](https://github.com/wtsi-npg/baton).

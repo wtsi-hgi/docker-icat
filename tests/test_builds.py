@@ -54,15 +54,17 @@ class _TestICAT(TestUsingObject[ObjectTypeUsedInTest], metaclass=ABCMeta):
 
     def setUp(self):
         self.setup = self.get_object_to_test()
-        random_image_name = create_random_string(self.setup.image_name)
-        type(self)._build_image((self.setup.base_image_to_build, (random_image_name, self.setup.location)))
-        repository, tag = self.setup.image_name.split(":")
+        self.random_image_name = create_random_string(self.setup.image_name)
+        type(self)._build_image((self.setup.base_image_to_build, (self.random_image_name, self.setup.location)))
+        repository, tag = self.random_image_name.split(":")
         ServiceController = build_irods_service_controller_type(repository, tag, self.setup.superclass)
         self.service_controller = ServiceController()
         self.service = self.service_controller.start_service()
 
     def tearDown(self):
         self.service_controller.stop_service(self.service)
+        client = docker.from_env()
+
 
     def test_starts(self):
         test_file_name = "test123"
