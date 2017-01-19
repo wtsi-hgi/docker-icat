@@ -17,14 +17,12 @@ service postgresql start
 # the setup: http://wiki.irods.org/index.php/Changing_the_IP_Address. Sadly, this no longer works and I could not find
 # an alternative/way of fixing the damage other than this pretty nasty hack.
 echo $(cat /var/lib/irods/.irods/irods_environment.json | jq '.irods_host="localhost"') > /var/lib/irods/.irods/irods_environment.json
-#sed -i "s/irods_host.*/irods_host\": \"localhost\",/g" /var/lib/irods/.irods/irods_environment.json
 
 # Copy iRODS settings
 mkdir /root/.irods
 cp /var/lib/irods/.irods/* /root/.irods
 
 # Create iRODS storage resource
-#/root/start-irods.sh
 iinit irods123
 iadmin modresc demoResc host localhost
 
